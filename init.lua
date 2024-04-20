@@ -61,15 +61,69 @@ vim.opt.rtp:prepend(lazypath)
 -- lazy.vim plugins
 require('lazy').setup {
   {
-    'projekt0n/github-nvim-theme',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
+    'mfussenegger/nvim-lint',
+    event = { 'BufReadPre', 'BufNewFile' },
     config = function()
-      require('github-theme').setup {
-        -- ...
+      local lint = require 'lint'
+      lint.linters_by_ft = {
+        markdown = { 'markdownlint' },
       }
+      local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
+      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+        group = lint_augroup,
+        callback = function()
+          require('lint').try_lint()
+        end,
+      })
+    end,
+  },
 
-      vim.cmd 'colorscheme github_dark_high_contrast'
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    opts = {},
+  },
+
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    config = function()
+      require('catppuccin').setup {
+        term_colors = true,
+        transparent_background = false,
+        styles = {
+          comments = {},
+          conditionals = {},
+          loops = {},
+          functions = {},
+          keywords = {},
+          strings = {},
+          variables = {},
+          numbers = {},
+          booleans = {},
+          properties = {},
+          types = {},
+        },
+        color_overrides = {
+          mocha = {
+            base = '#000000',
+            mantle = '#000000',
+            crust = '#000000',
+          },
+        },
+        integrations = {
+          telescope = {
+            enabled = true,
+            style = 'nvchad',
+          },
+          dropbar = {
+            enabled = true,
+            color_mode = true,
+          },
+        },
+      }
+      vim.cmd 'colorscheme catppuccin'
     end,
   },
 
@@ -372,5 +426,4 @@ require('lazy').setup {
       require('nvim-treesitter.configs').setup(opts)
     end,
   },
-  require 'kickstart.plugins.indent_line',
 }
