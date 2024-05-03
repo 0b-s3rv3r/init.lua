@@ -280,6 +280,7 @@ require('lazy').setup {
         -- gopls = {},
         -- pyright = {},
         rust_analyzer = {},
+        zls = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -328,6 +329,7 @@ require('lazy').setup {
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        zig = { 'zig fmt' },
       },
     },
   },
@@ -397,6 +399,7 @@ require('lazy').setup {
     config = function()
       require('mini.ai').setup { n_lines = 500 }
       require('mini.surround').setup()
+      require('mini.pairs').setup()
 
       local statusline = require 'mini.statusline'
 
