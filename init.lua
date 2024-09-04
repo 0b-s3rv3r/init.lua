@@ -85,6 +85,17 @@ require('lazy').setup {
   },
 
   {
+    'neanias/everforest-nvim',
+    version = false,
+    lazy = false,
+    priority = 1000,
+  },
+
+  {
+    'mhartington/oceanic-next',
+  },
+
+  {
     'catppuccin/nvim',
     name = 'catppuccin',
     priority = 1000,
@@ -123,7 +134,7 @@ require('lazy').setup {
           },
         },
       }
-      vim.cmd 'colorscheme catppuccin'
+      vim.cmd 'colorscheme everforest'
     end,
   },
 
@@ -150,12 +161,17 @@ require('lazy').setup {
     config = function()
       require('which-key').setup()
 
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+      require('which-key').add {
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>c_', hidden = true },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>d_', hidden = true },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>r_', hidden = true },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>s_', hidden = true },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>w_', hidden = true },
       }
     end,
   },
@@ -278,7 +294,7 @@ require('lazy').setup {
       local servers = {
         clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         rust_analyzer = {},
         zls = {},
 
@@ -420,9 +436,8 @@ require('lazy').setup {
       auto_install = true,
       highlight = {
         enable = true,
-        additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = true },
     },
     config = function(_, opts)
       ---@diagnostic disable-next-line: missing-fields
