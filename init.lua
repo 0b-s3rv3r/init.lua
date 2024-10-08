@@ -1,10 +1,7 @@
--- global settings
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.g.have_nerd_font = false
 vim.opt.number = true
 vim.opt.mouse = 'a'
-vim.opt.showmode = false
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.breakindent = true
 vim.opt.undofile = true
@@ -15,42 +12,33 @@ vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 vim.opt.relativenumber = true
 
--- keymaps
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<C-n>', vim.diagnostic.goto_next, { desc = 'next diagnostic msg' })
+vim.keymap.set('n', '<C-p>', vim.diagnostic.goto_prev, { desc = 'prev diagnostic msg' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'show diagnostic msgs' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'open diagnostic quick list' })
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'exit terminal mode' })
+vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'left window focus' })
+vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'right window focus' })
+vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'lower window focus' })
+vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'upper window focus' })
 vim.keymap.set('n', '<leader>W', '<cmd>write<cr>')
+vim.api.nvim_set_keymap('i', 'ii', '<ESC>', { noremap = true, silent = true, desc = 'exit insert mode' })
 
--- autocommands
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
   end,
 })
-vim.api.nvim_create_user_command('ReloadConfig', 'source $MYVIMRC', {})
 
--- intall lazy.vim
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -58,8 +46,21 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
--- lazy.vim plugins
 require('lazy').setup {
+  {
+    'neanias/everforest-nvim',
+    version = false,
+    lazy = false,
+    priority = 1000,
+  },
+
+  {
+    'mhartington/oceanic-next',
+    config = function()
+      vim.cmd 'colorscheme OceanicNext'
+    end
+  },
+
   {
     'mfussenegger/nvim-lint',
     event = { 'BufReadPre', 'BufNewFile' },
@@ -78,65 +79,13 @@ require('lazy').setup {
     end,
   },
 
+
   {
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
     opts = {},
   },
 
-  {
-    'neanias/everforest-nvim',
-    version = false,
-    lazy = false,
-    priority = 1000,
-  },
-
-  {
-    'mhartington/oceanic-next',
-  },
-
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000,
-    config = function()
-      require('catppuccin').setup {
-        term_colors = true,
-        transparent_background = false,
-        styles = {
-          comments = {},
-          conditionals = {},
-          loops = {},
-          functions = {},
-          keywords = {},
-          strings = {},
-          variables = {},
-          numbers = {},
-          booleans = {},
-          properties = {},
-          types = {},
-        },
-        color_overrides = {
-          mocha = {
-            base = '#000000',
-            mantle = '#000000',
-            crust = '#000000',
-          },
-        },
-        integrations = {
-          telescope = {
-            enabled = true,
-            style = 'nvchad',
-          },
-          dropbar = {
-            enabled = true,
-            color_mode = true,
-          },
-        },
-      }
-      vim.cmd 'colorscheme everforest'
-    end,
-  },
 
   { 'tpope/vim-sleuth' },
 
@@ -292,16 +241,13 @@ require('lazy').setup {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
       local servers = {
-        clangd = {},
+        clangd = { 'c', 'cpp' },
         -- gopls = {},
         pyright = {},
         rust_analyzer = {},
         zls = {},
 
         lua_ls = {
-          -- cmd = {...},
-          -- filetypes = { ...},
-          -- capabilities = {},
           settings = {
             Lua = {
               completion = {
@@ -336,16 +282,11 @@ require('lazy').setup {
     'stevearc/conform.nvim',
     opts = {
       notify_on_error = false,
-      format_on_save = function(bufnr)
-        local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
       formatters_by_ft = {
         lua = { 'stylua' },
         zig = { 'zig fmt' },
+        c = { 'clang-format' },
+        cpp = { 'clang-format' },
       },
     },
   },
@@ -415,7 +356,7 @@ require('lazy').setup {
     config = function()
       require('mini.ai').setup { n_lines = 500 }
       require('mini.surround').setup()
-      require('mini.pairs').setup()
+      -- require('mini.pairs').setup()
 
       local statusline = require 'mini.statusline'
 
