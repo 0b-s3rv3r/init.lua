@@ -48,6 +48,15 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup {
   {
+    'AlexvZyl/nordic.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd 'colorscheme nordic'
+    end,
+  },
+
+  {
     'neanias/everforest-nvim',
     version = false,
     lazy = false,
@@ -56,9 +65,6 @@ require('lazy').setup {
 
   {
     'mhartington/oceanic-next',
-    config = function()
-      vim.cmd 'colorscheme OceanicNext'
-    end,
   },
 
   {
@@ -77,12 +83,6 @@ require('lazy').setup {
         end,
       })
     end,
-  },
-
-  {
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
-    opts = {},
   },
 
   { 'tpope/vim-sleuth' },
