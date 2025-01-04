@@ -47,17 +47,31 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup {
+
+  -- {
+  --   'projekt0n/github-nvim-theme',
+  --   name = 'github-theme',
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     require('github-theme').setup {
+  --       -- ...
+  --     }
+  --
+  --     vim.cmd 'colorscheme github_dark_default'
+  --   end,
+  -- },
+
   {
-    'AlexvZyl/nordic.nvim',
+    'Mofiqul/adwaita.nvim',
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd 'colorscheme nordic'
+      vim.g.adwaita_darker = true
+      vim.g.adwaita_disable_cursorline = true
+      vim.o.background = 'dark'
+      vim.cmd 'colorscheme adwaita'
     end,
-  },
-
-  {
-    'mhartington/oceanic-next',
   },
 
   {
